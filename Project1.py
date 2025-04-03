@@ -1,6 +1,11 @@
 import pickle
+import os
 from dataclasses import dataclass, field
 from typing import List
+
+
+DATA_DIR = "/app/data"
+DATA_FILE = os.path.join(DATA_DIR, "address_book.pkl")
 
 
 @dataclass
@@ -29,14 +34,15 @@ class AddressBook:
             print(f"- {contact}")
 
 
-def save_data(book: AddressBook, filename: str = "address_book.pkl") -> None:
-    with open(filename, "wb") as f:
+def save_data(book: AddressBook) -> None:
+    os.makedirs(DATA_DIR, exist_ok=True)  # Створюємо папку, якщо її немає
+    with open(DATA_FILE, "wb") as f:
         pickle.dump(book, f)
 
 
-def load_data(filename: str = "address_book.pkl") -> AddressBook:
+def load_data() -> AddressBook:
     try:
-        with open(filename, "rb") as f:
+        with open(DATA_FILE, "rb") as f:
             return pickle.load(f)
     except (FileNotFoundError, EOFError):
         return AddressBook()
